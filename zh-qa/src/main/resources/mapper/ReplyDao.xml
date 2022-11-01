@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weijia.zh.qa.dao.ReplyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.weijia.zh.qa.entity.ReplyEntity" id="replyMap">
+        <result property="id" column="id"/>
+        <result property="problemId" column="problem_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userAvatar" column="user_avatar"/>
+        <result property="thumbUp" column="thumb_up"/>
+        <result property="condition" column="condition"/>
+    </resultMap>
+
+    <resultMap id="replyAndProblem" type="com.weijia.zh.qa.vo.ReplyVo">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="problemId" column="problemId"/>
+        <result property="title" column="title"/>
+    </resultMap>
+    <select id="searchReplies" resultMap="replyAndProblem">
+        SELECT r.content,r.id as id,p.id as problemId,p.title
+        from tb_problem p ,tb_reply as r
+        where r.problem_id = p.id and r.user_id = #{userId} and r.issue = #{issue} and p.`condition` != 2
+        ORDER BY r.id desc
+    </select>
+    <select id="searchRepliesByFavorites" resultMap="replyAndProblem">
+        SELECT r.id as id,r.content ,p.title,p.id problemId
+        from tb_collect c join tb_reply r on (c.reply_id=r.id) join tb_problem p on (p.id=r.problem_id)
+        where c.favorites_id = #{fid} and p.`condition` != 2
+        ORDER BY c.id desc
+    </select>
+    <select id="searchReplyByProblemId" resultType="com.weijia.zh.qa.entity.ReplyEntity">
+        SELECT id,problem_id,content,create_time,update_time,user_id,user_name,user_avatar,thumb_up,`condition`,issue,collect
+        FROM tb_reply
+        WHERE id = (
+            SELECT id
+            FROM tb_reply
+            where problem_id = #{problem_id} AND issue = 1
+            ORDER BY id DESC LIMIT #{current},1
+        )
+    </select>
+
+    <update id="incrReplyLike">
+        UPDATE tb_reply
+        set tb_reply.thumb_up = #{number}
+        where id = #{id}
+    </update>
+
+    <update id="incrCollect">
+        UPDATE tb_reply
+        set tb_reply.collect =#{number}+tb_reply.collect
+        where id = #{replyId}
+    </update>
+
+</mapper>

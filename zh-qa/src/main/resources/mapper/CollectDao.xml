@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定全类名，DAO/Mapper接口-->
+<mapper namespace="com.weijia.zh.qa.dao.CollectDao">
+
+    <select id="searchFavoritesIdByReplyIdAndUserId" resultType="java.lang.Long">
+        SELECT favorites_id FROM `tb_collect`
+        where user_id = #{userId} and reply_id = #{replyId}
+    </select>
+    <select id="selectCountCollectReplyByUser" resultType="java.lang.Long">
+        SELECT COUNT( DISTINCT user_id) FROM tb_collect WHERE  reply_id = #{replyId}
+    </select>
+</mapper>

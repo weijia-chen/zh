@@ -1,0 +1,127 @@
+server:
+  port: 8802
+
+spring:
+  rabbitmq:
+#    host: 120.25.201.189
+    host: 192.168.56.10
+    username: admin
+    password: admin
+    port: 5672
+    publisher-confirm-type: correlated #新版本中，开启生产者的确认机制：确认消息是否正确到达交换机中
+    publisher-returns: true #确认消息已经发送到队列
+  application:
+    name: zh-qa
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #??Nacos??
+    sentinel:
+      transport:
+        dashboard: localhost:8080 #配置Sentinel dashboard地址
+        port: 8719
+      datasource:
+        ds1:
+          nacos:
+            server-addr: localhost:8848
+            dataId: zh-qa
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+            username: nacos
+            password: nacos
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #MySQL??
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zh_qa?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+  session:
+    store-type: redis #选择分布式session使用redis存储
+  # redis配置
+  redis:
+    #服务器地址
+    host: 192.168.56.10
+#    host: 120.76.202.155
+    #端口
+    port: 6379
+    #数据库
+    database: 1
+    #超时时间
+    timeout: 1000ms
+    #密码
+    password: Weijia110
+    lettuce:
+      pool:
+        #最大连接数，默认8
+        max-active: 8
+        #最大连接阻塞等待时间，默认-1
+        max-wait: 1000ms
+        #最大空闲连接，默认8
+        max-idle: 200
+        #最小空闲连接，默认0
+        min-idle: 5
+
+#线程池的配置信息
+ThreadPool:
+  corePoolSize: 50 #核心线程数
+  maxPoolSize: 200 #最大线程数
+  queueSize: 20000 #阻塞队列最大长度
+  keepTime: 30 #单位是 秒
+
+# MyBatis SQL打印(方法接口所在的包，不是Mapper.xml所在的包)
+logging:
+  level:
+    com.weijia.zh.qa.dao: debug
+
+# 开启feign熔断，开启后能够监控到远程调用资源
+feign:
+  sentinel:
+    enabled: true
+# 审计模块暴露，应用健康情况（配合sentinel dashboard）
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
+
+redisKey:
+  visits: visits  #问题浏览次数，zSet数据类型
+  topics: topics  #话题的缓存，List
+  problem: problem #问题的缓存，String
+  replies: replies #回答的缓存，list
+  praise: praise #点赞次数的缓存。String
+  praiseUser: praiseUser #点赞人的缓存。set
+  hot: hot #热板数据，list集合
+  fixed: fixed
+  distributed:
+    dtopics: dtopics
+
+pageSize: 20
+hotNumber: 5
+praiseSize: 3 #点赞数量更新阈值
+
+seata:
+  tx-service-group: test-tx-group  #对应seataServer.properties中的service.vgroupMapping.my_test_tx_group 集群分组
+  registry:
+    type: nacos   #注册中心类型：nacos
+    nacos:
+      application: seata-server      # seata-server注册在nacos中的服务名
+      server-addr: 127.0.0.1:8848    # nacos的地址端口
+      group : SEATA_GROUP            # seata-server在nacos的分组
+      namespace:            # seata-server在nacos的命名空间ID
+      username: nacos                # nacos账号
+      password: nacos                # nacos密码
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace:                  # seata-server的配置文件的命名空间ID
+      dataId: seataServer.properties       # seata-server在nacos的配置dataId
+      username: nacos
+      password: nacos
+

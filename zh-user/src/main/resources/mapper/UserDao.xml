@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weijia.zh.user.dao.UserDao">
+
+
+    <update id="incrFollowCount">
+        UPDATE tb_user
+        SET follow_count = follow_count+#{number}
+        where id=#{userId}
+    </update>
+
+    <update id="incrFansCount">
+        UPDATE tb_user
+        SET fans_count = fans_count+#{number}
+        where id=#{userId}
+    </update>
+    <update id="updateAdvice">
+        update tb_user
+        set advice = #{number}
+        where id = #{userId}
+    </update>
+    <select id="searchAdvice" resultType="java.lang.Integer">
+        select advice
+        from tb_user
+        where id = #{userId}
+    </select>
+
+
+</mapper>

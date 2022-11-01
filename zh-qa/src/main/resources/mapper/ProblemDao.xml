@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weijia.zh.qa.dao.ProblemDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.weijia.zh.qa.entity.ProblemEntity" id="problemMap">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="visits" column="visits"/>
+        <result property="reply" column="reply"/>
+        <result property="condition" column="condition"/>
+        <result property="cause" column="cause"/>
+        <result property="topicId" column="topic_id"/>
+    </resultMap>
+
+    <select id="searchProblems" parameterType="list" resultType="com.weijia.zh.qa.entity.ProblemEntity">
+        SELECT id,title,update_time,user_name
+        from tb_problem
+        <where>
+            <foreach collection="list" item="id" open="id in (" close=")" separator=",">
+                #{id}
+            </foreach>
+            and  `condition` != 2
+        </where>
+    </select>
+    <select id="searchProblemsByTopicId" resultType="com.weijia.zh.qa.vo.ProblemVo">
+        SELECT tb_problem.id,title,update_time,reply
+        FROM tb_problem RIGHT JOIN (
+            SELECT pro.id
+            FROM tb_problem as pro
+            where topic_id = #{topicId} and `condition` != 2
+            ORDER BY pro.id
+            DESC LIMIT #{current},20
+        ) as temp ON (temp.id = tb_problem.id)
+    </select>
+    <select id="searchProblemsCountByTopicId" resultType="java.lang.Long">
+        SELECT COUNT('id') AS total FROM tb_problem WHERE topic_id = #{topicId} and `condition` != 2
+    </select>
+    <select id="differenceProblems" resultMap="problemMap">
+        select *
+        from tb_problem
+        <where>
+            <foreach collection="list" item="id" open="id not in (" close=")" separator=",">
+                #{id}
+            </foreach>
+            and `condition` != 2
+        </where>
+        ORDER BY id desc
+        limit 0,#{number}
+    </select>
+    <select id="checkProblemIsFail" resultType="java.lang.Integer">
+        SELECT `condition`
+        from tb_problem
+        where id = #{problemId}
+    </select>
+
+    <update id="incrReplyNumber" >
+        update tb_problem
+        set tb_problem.reply = tb_problem.reply+1
+        where id = #{problemId}
+    </update>
+
+    <update id="incrCollectNumber">
+        update tb_problem
+        set tb_problem.follow = tb_problem.follow+#{number}
+        where id = #{problemId}
+    </update>
+
+    <update id="updateProblemVisit">
+        UPDATE tb_problem
+        set visits = visits + #{score}
+        where id = #{problemId}
+    </update>
+
+</mapper>

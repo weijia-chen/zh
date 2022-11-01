@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weijia.zh.user.dao.FollowDao">
+
+    <select id="searchUserFollowUsers" resultType="_long">
+        SELECT target_id
+        FROM tb_follow
+        where user_id = #{userId}
+    </select>
+
+    <select id="searchUserIdByTarget" resultType="_long">
+        SELECT user_id
+        FROM tb_follow
+        where target_id=#{targetId}
+    </select>
+
+    <select id="searchFollow" resultMap="userName">
+        SELECT u.nick_name,u.id,f.user_id
+        from tb_user as u,tb_follow as f
+        where u.id = f.target_id and f.user_id =#{userId}
+    </select>
+    <resultMap id="userName" type="com.weijia.zh.user.vo.FollowUserInfoVo">
+        <result property="nickName" column="nick_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="targetId" column="id"/>
+    </resultMap>
+
+</mapper>

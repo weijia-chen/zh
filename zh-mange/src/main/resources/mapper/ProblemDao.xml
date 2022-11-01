@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定全类名，DAO/Mapper接口-->
+<mapper namespace="com.weijia.zh.manage.dao.ProblemDao">
+    <delete id="delRepliesByProblem">
+        DELETE
+        FROM tb_reply
+        where problem_id = #{problemId}
+    </delete>
+
+    <select id="searchProblems" resultType="com.weijia.zh.manage.entity.Problem">
+        select id,title,content
+        from tb_problem
+        where `condition` = 0
+        ORDER BY id
+        LIMIT #{begin},#{size}
+    </select>
+</mapper>

@@ -1,0 +1,66 @@
+server:
+  port: 8804
+
+spring:
+  application:
+    name: zh-manage
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #??Nacos??
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    #MySQL??
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zh_qa?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+  session:
+    store-type: redis #选择分布式session使用redis存储
+  # redis配置
+  redis:
+    #服务器地址
+    host: 192.168.56.10
+    #    host: 120.76.202.155
+    #端口
+    port: 6379
+    #数据库
+    database: 1
+    #超时时间
+    timeout: 1000ms
+    #密码
+    password: Weijia110
+    lettuce:
+      pool:
+        #最大连接数，默认8
+        max-active: 8
+        #最大连接阻塞等待时间，默认-1
+        max-wait: 1000ms
+        #最大空闲连接，默认8
+        max-idle: 200
+        #最小空闲连接，默认0
+        min-idle: 5
+
+
+# MyBatis SQL打印(方法接口所在的包，不是Mapper.xml所在的包)
+logging:
+  level:
+    com.weijia.zh.manage.dao: debug
+
+# 开启feign熔断，开启后能够监控到远程调用资源
+feign:
+  sentinel:
+    enabled: true
+# 审计模块暴露，应用健康情况（配合sentinel dashboard）
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
+
+redisKey:
+  hot: hot #热板数据，list集合
+
+
+

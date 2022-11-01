@@ -1,0 +1,41 @@
+server:
+  port: 8800
+
+#配置放行的原始域（即前端地址）
+origin: http://localhost:8082
+
+spring:
+
+  application:
+    name: zh-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true  #开启动态路由
+      routes:
+        - id: zh_qa
+          uri: lb://zh-qa
+          predicates:
+            - Path=/qa/**
+          filters:
+            - RewritePath=/qa/(?<segment>.*),/$\{segment} #转发的时候把/qa去掉
+
+        - id: zh_user
+          uri: lb://zh-user
+          predicates:
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<segment>.*),/$\{segment} #转发的时候把/user去掉
+
+        - id: zh_manage
+          uri: lb://zh-manage
+          predicates:
+            - Path=/manage/**
+          filters:
+            - RewritePath=/manage/(?<segment>.*),/$\{segment} #转发的时候把/user去掉
+
+
