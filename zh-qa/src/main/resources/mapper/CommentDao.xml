@@ -9,8 +9,7 @@
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="userAvatar" column="user_avatar"/>
-        <result property="problemId" column="problem_id"/>
-        <result property="reliyId" column="reliy_id"/>
+        <result property="replyId" column="reliy_id"/>
         <result property="content" column="content"/>
         <result property="createTime" column="create_time"/>
     </resultMap>

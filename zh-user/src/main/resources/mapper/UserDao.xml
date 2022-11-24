@@ -25,6 +25,27 @@
         from tb_user
         where id = #{userId}
     </select>
+    <select id="searchUsers" resultType="com.weijia.zh.user.entity.UserEntity">
+        SELECT tb_user.id,nick_name,fans_count,`condition`,register_time
+        FROM tb_user RIGHT JOIN (
+            select u2.id
+            FROM tb_user as u2
+            ORDER BY id
+                LIMIT #{current},#{size}
+        ) as temp ON temp.id = tb_user.id
+    </select>
+    <select id="searchUsersByNameOrCondition" resultType="com.weijia.zh.user.entity.UserEntity" >
+        SELECT tb_user.id,nick_name,fans_count,`condition`,register_time
+        FROM tb_user
+        <where>
+            <if test="searchUserVo.nickName !=null">
+                and nick_name like  CONCAT('%',#{searchUserVo.nickName},'%')
+            </if>
+            <if test="searchUserVo.condition != null">
+                and `condition` = #{searchUserVo.condition}
+            </if>
+        </where>
+    </select>
 
 
 </mapper>

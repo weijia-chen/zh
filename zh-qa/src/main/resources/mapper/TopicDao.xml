@@ -7,7 +7,6 @@
     <resultMap type="com.weijia.zh.qa.entity.TopicEntity" id="topicMap">
         <result property="id" column="id"/>
         <result property="topicName" column="topic_name"/>
-        <result property="problemCount" column="problem_count"/>
     </resultMap>
 
 

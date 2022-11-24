@@ -2,12 +2,15 @@ package com.weijia.zh.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.weijia.zh.common.utils.R;
+import com.weijia.zh.common.utils.RespData;
 import com.weijia.zh.user.entity.UserEntity;
+import com.weijia.zh.user.vo.SearchUserVo;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,5 +45,9 @@ public interface UserService{
    boolean isAdvice(Long userId);
 
    boolean cleanAdvice(Long userId);
+
+   /**根据条件 分页 检索用户：用户名 || 账号状态*/
+   R<RespData> userList(SearchUserVo searchUserVo);
+
 }
 

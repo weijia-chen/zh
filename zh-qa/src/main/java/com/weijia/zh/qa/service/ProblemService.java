@@ -28,7 +28,7 @@ public interface ProblemService{
      * @param current ：当前的页数
      * @return
      */
-    R searchProblemByTopic(Long topicId,Long current);
+    R searchProblemByTopic(Long topicId,Long current,Long pageSize);
 
     ProblemEntity searchProblemById(Long problemId);
     /**

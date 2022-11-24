@@ -97,7 +97,7 @@ public class ReplyServiceImpl implements ReplyService {
     public ReplyEntity searchReply(Long problemId,Long current) {
 
         UserEntity user = HandlerInterceptor.loginUser.get();
-        ReplyEntity replyEntity =  this.replyDao.searchReplyByProblemId(problemId,current-1);
+        ReplyEntity replyEntity =  this.replyDao.searchReplyByProblemId(problemId,current-1);//每次1条，前端从1开始，limit从0开始，需要减1
         if (replyEntity == null)
             return null;
         Long userId = replyEntity.getUserId();//答主id

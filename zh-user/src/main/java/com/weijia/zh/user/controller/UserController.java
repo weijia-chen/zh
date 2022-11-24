@@ -11,6 +11,7 @@ import com.weijia.zh.user.service.UserService;
 import com.weijia.zh.user.vo.Login;
 import com.weijia.zh.user.vo.Register;
 import com.weijia.zh.user.vo.RespBeanEnum;
+import com.weijia.zh.user.vo.SearchUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -136,6 +137,11 @@ public class UserController {
         UserEntity user = HandlerInterceptor.loginUser.get();
         boolean b = this.userService.cleanAdvice(user.getId());
         return new R(RespBeanEnum.SUCCESS,b);
+    }
+
+    @PostMapping("/searchUsers")
+    public R searchUsers(@RequestBody SearchUserVo searchUserVo){
+        return this.userService.userList(searchUserVo);
     }
 
 

@@ -160,10 +160,12 @@ public class ProblemServiceImpl  implements ProblemService {
     }
 
     @Override
-    public R searchProblemByTopic(Long topicId, Long current) {
+    public R searchProblemByTopic(Long topicId, Long current,Long pageSize) {
 
+        /**先将页数转换为起始记录行**/
+        current = (current-1)*pageSize;
         //问题列表
-        List<ProblemVo> records = this.problemDao.searchProblemsByTopicId(topicId,current-1);
+        List<ProblemVo> records = this.problemDao.searchProblemsByTopicId(topicId,current,pageSize);
         //问题总数
         long total = this.problemDao.searchProblemsCountByTopicId(topicId);
 

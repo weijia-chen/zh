@@ -1,13 +1,16 @@
 package com.weijia.zh.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.weijia.zh.common.utils.R;
+import com.weijia.zh.common.utils.RespData;
 import com.weijia.zh.common.utils.UUIDUtil;
 import com.weijia.zh.user.config.HandlerInterceptor;
 import com.weijia.zh.user.feign.QaFeign;
 import com.weijia.zh.user.utils.MultipartFileUtil;
 import com.weijia.zh.user.utils.RedisUtil;
 import com.weijia.zh.user.vo.RespBeanEnum;
+import com.weijia.zh.user.vo.SearchUserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -120,7 +124,6 @@ public class UserServiceImpl implements UserService {
         }, executor);
 
         CompletableFuture<String> combine = future1.thenCombine(future2, (a, b) -> {
-            user.setUpdateTime(new Date()); //上一次修改用户信息的时候
             int insert = userDao.insert(user);
             log.info("combine==={}",Thread.currentThread().getName());
             return UUIDUtil.uuid();
@@ -210,6 +213,11 @@ public class UserServiceImpl implements UserService {
 
 //        成功
         if(userEntity.getPassword().equals(pass)){
+
+            //判断是否封号
+            if (userEntity.getCondition() == 1){
+                return new R(null,4003,userEntity.getCause());
+            }
             String uuid = UUIDUtil.uuid();
             session.setAttribute(uuid,userEntity);
             Cookie cookie = new Cookie(this.userTicket,uuid);
@@ -269,5 +277,13 @@ public class UserServiceImpl implements UserService {
         if (i<=0)
             return false;
         return true;
+    }
+
+
+    @Override
+    public R<RespData> userList(SearchUserVo searchUserVo) {
+        Page<UserEntity> page = new Page<>(searchUserVo.getCurrent(), searchUserVo.getSize());
+        IPage<UserEntity> users = this.userDao.searchUsersByNameOrCondition(page,searchUserVo);
+        return new R(RespBeanEnum.SUCCESS,new RespData(users.getRecords(),users.getTotal()));
     }
 }

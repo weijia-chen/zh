@@ -1,5 +1,6 @@
 package com.weijia.zh.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -76,21 +77,18 @@ public class UserEntity{
 	/**
 	 * 上一次修改用户信息的时间，每个星期才能修改一次
 	 */
-	private Date updateTime;
-
-	/**
-	 * 未读关注的人动态数量
-	 */
-	private Integer follow_user_message;
-	/**
-	 * 未读关注的问题动态数量
-	 */
-	private Integer follow_problem_message;
+	private Date registerTime;
 
 	/**
 	 * 未读的通知数量
 	 */
 	private Integer advice;
 
+	/**用户状态：0正常，1封禁*/
+	@TableField(value = "`condition`")
+	private Integer condition;
+
+	/**封号原因*/
+	private String cause;
 
 }

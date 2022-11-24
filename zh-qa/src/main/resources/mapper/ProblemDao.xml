@@ -36,7 +36,7 @@
             FROM tb_problem as pro
             where topic_id = #{topicId} and `condition` != 2
             ORDER BY pro.id
-            DESC LIMIT #{current},20
+            DESC LIMIT #{current},#{pageSize}
         ) as temp ON (temp.id = tb_problem.id)
     </select>
     <select id="searchProblemsCountByTopicId" resultType="java.lang.Long">

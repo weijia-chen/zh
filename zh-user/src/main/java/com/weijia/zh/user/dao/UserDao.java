@@ -1,9 +1,14 @@
 package com.weijia.zh.user.dao;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.weijia.zh.user.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.weijia.zh.user.vo.SearchUserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 用户
@@ -26,4 +31,8 @@ public interface UserDao extends BaseMapper<UserEntity> {
 
     //查看通知标记
     int searchAdvice(@Param("userId")Long userId);
+
+    List<UserEntity> searchUsers(@Param("current") Integer current, @Param("size")Integer size);
+
+    IPage<UserEntity> searchUsersByNameOrCondition(Page<UserEntity> user,@Param("searchUserVo") SearchUserVo searchUserVo);
 }

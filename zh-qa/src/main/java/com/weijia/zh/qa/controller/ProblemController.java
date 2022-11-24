@@ -59,8 +59,8 @@ public class ProblemController {
 
     /**查询指定话题的问题，用户列表展示，返回的problemVo**/
     @GetMapping("/searchProblemByTopic")
-    public  R searchProblemByTopic(@Param("topicId")Long topicId,@Param("current") Long current) {
-        return this.problemService.searchProblemByTopic(topicId,current);
+    public  R searchProblemByTopic(@Param("topicId")Long topicId,@Param("current") Long current,@Param("pageSize")Long pageSize) {
+        return this.problemService.searchProblemByTopic(topicId,current,pageSize);
     }
 
     /**

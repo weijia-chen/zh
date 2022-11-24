@@ -69,8 +69,8 @@ public class UserEntity {
 	 */
 	private Long thumbUp;
 	/**
-	 * 上一次修改用户信息的时间，每个星期才能修改一次
+	 * 注册时间
 	 */
-	private Date updateTime;
+	private Date registerTime;
 
 }

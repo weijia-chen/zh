@@ -27,7 +27,8 @@ public interface ProblemDao extends BaseMapper<ProblemEntity> {
 
     List<ProblemEntity> searchProblems(List<Long> list);
 
-    List<ProblemVo> searchProblemsByTopicId(@Param("topicId")Long topicId,@Param("current") Long current);
+    /**根据话题查找问题，分页**/
+    List<ProblemVo> searchProblemsByTopicId(@Param("topicId")Long topicId,@Param("current") Long current,@Param("pageSize") Long pageSize);
 
     long searchProblemsCountByTopicId(Long topicId);
 
